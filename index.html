@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b1a">
+  <title>NEBULA — Explore the Unknown</title>
+  <style>
+    :root { --accent: #8b5cf6; --accent2: #22d3ee; --bg: #080b1a; --panel: rgba(255,255,255,.06); }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; min-height: 100vh; color: #f8fafc; background: var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+    #stars { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; }
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background: radial-gradient(ellipse at 20% 20%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 45%),
+                  radial-gradient(ellipse at 85% 65%, color-mix(in srgb, var(--accent2) 13%, transparent), transparent 40%);
+      transition: background .5s ease;
+    }
+    nav { width: min(1100px, 92%); margin: auto; padding: 26px 0; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-weight: 900; letter-spacing: .2em; font-size: 1.05rem; }
+    .logo span { color: var(--accent2); }
+    nav a { color: #cbd5e1; text-decoration: none; margin-left: 24px; font-size: .92rem; }
+    nav a:hover { color: white; }
+    .hero { width: min(1100px, 92%); min-height: 72vh; margin: auto; display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; gap: 45px; padding: 45px 0 75px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--accent2); font-size: .78rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+    .dot { width: 7px; height: 7px; background: var(--accent2); border-radius: 50%; box-shadow: 0 0 15px var(--accent2); }
+    h1 { font-size: clamp(3.3rem, 8vw, 6.8rem); line-height: .95; letter-spacing: -.075em; margin: 22px 0; }
+    h1 .gradient { background: linear-gradient(100deg, #fff 10%, var(--accent2) 48%, var(--accent)); color: transparent; background-clip: text; -webkit-background-clip: text; }
+    .intro { max-width: 510px; color: #aab5cc; font-size: 1.08rem; line-height: 1.8; }
+    .actions { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 30px; }
+    .btn { border: 1px solid rgba(255,255,255,.15); border-radius: 999px; padding: 13px 21px; color: white; font-weight: 700; text-decoration: none; cursor: pointer; font-size: .93rem; transition: transform .2s, box-shadow .2s; }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px color-mix(in srgb, var(--accent) 35%, transparent); }
+    .primary { background: linear-gradient(100deg, var(--accent), #5b7cfa); border: none; }
+    .orb-wrap { display: grid; place-items: center; min-height: 350px; position: relative; }
+    .orb { width: min(310px, 70vw); aspect-ratio: 1; border-radius: 50%; position: relative; background: radial-gradient(circle at 30% 25%, #b9f7ff 0, #4e91ff 12%, #5c38b9 38%, #15102f 68%); box-shadow: inset -25px -20px 50px #050616, 0 0 60px color-mix(in srgb, var(--accent) 40%, transparent), 0 0 130px color-mix(in srgb, var(--accent2) 15%, transparent); animation: float 6s ease-in-out infinite; }
+    .orb::before { content: ""; position: absolute; inset: 18% -20%; border: 2px solid rgba(164,235,255,.65); border-radius: 50%; transform: rotate(-24deg) scaleY(.3); box-shadow: 0 0 16px var(--accent2); }
+    .orb::after { content: ""; position: absolute; inset: 30% -13%; border: 1px solid rgba(255,255,255,.32); border-radius: 50%; transform: rotate(35deg) scaleY(.22); }
+    .orbit { position: absolute; width: 370px; height: 370px; max-width: 90vw; border: 1px solid rgba(255,255,255,.09); border-radius: 50%; animation: spin 28s linear infinite; }
+    .orbit::after { content: ""; position: absolute; top: 13%; left: 14%; width: 10px; height: 10px; background: var(--accent2); border-radius: 50%; box-shadow: 0 0 20px var(--accent2); }
+    @keyframes float { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-16px) rotate(4deg); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .stats { width: min(1100px, 92%); margin: 0 auto 80px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .stat { padding: 24px; background: var(--panel); border: 1px solid rgba(255,255,255,.09); border-radius: 18px; backdrop-filter: blur(12px); }
+    .stat strong { display: block; font-size: 1.8rem; letter-spacing: -.04em; }
+    .stat span { display: block; margin-top: 6px; color: #98a5bd; font-size: .88rem; }
+    .section { width: min(1100px, 92%); margin: 0 auto 100px; }
+    .section h2 { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.05em; margin: 0 0 12px; }
+    .section > p { color: #aab5cc; line-height: 1.7; max-width: 600px; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+    .card { padding: 25px; min-height: 190px; border: 1px solid rgba(255,255,255,.1); background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025)); border-radius: 20px; transition: transform .25s, border-color .25s; }
+    .card:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--accent2) 60%, transparent); }
+    .card .icon { font-size: 1.7rem; }
+    .card h3 { margin: 18px 0 8px; }
+    .card p { color: #9ba8c0; line-height: 1.65; font-size: .94rem; }
+    footer { width: min(1100px, 92%); margin: auto; padding: 25px 0 35px; color: #7e8ba5; border-top: 1px solid rgba(255,255,255,.1); display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; font-size: .85rem; }
+    @media (max-width: 760px) {
+      nav a { margin-left: 12px; font-size: .82rem; }
+      .hero { grid-template-columns: 1fr; padding-top: 45px; gap: 10px; }
+      .orb-wrap { min-height: 330px; }
+      .stats, .cards { grid-template-columns: 1fr; }
+      .stats { margin-bottom: 65px; }
+      .stat { padding: 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <nav>
+    <div class="logo">NEBULA<span>.</span></div>
+    <div><a href="#discover">Discover</a><a href="#mission">Mission</a></div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> A little beyond the ordinary</div>
+        <h1>Explore<br><span class="gradient">the unknown.</span></h1>
+        <p class="intro">The universe is full of things we have yet to understand. Take a breath, look up, and let your curiosity lead the way.</p>
+        <div class="actions">
+          <a class="btn primary" href="#discover">Start exploring ↗</a>
+          <button class="btn" id="colorBtn" type="button">Change the vibe ✦</button>
+        </div>
+      </div>
+      <div class="orb-wrap" aria-label="A glowing illustrated planet">
+        <div class="orbit"></div><div class="orb"></div>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Space facts">
+      <div class="stat"><strong>∞</strong><span>Possibilities to discover</span></div>
+      <div class="stat"><strong>100B+</strong><span>Estimated galaxies in the observable universe</span></div>
+      <div class="stat"><strong>1</strong><span>Planet we call home</span></div>
+    </section>
+
+    <section class="section" id="discover">
+      <div class="eyebrow"><span class="dot"></span> Your next rabbit hole</div>
+      <h2>Wonder starts here.</h2>
+      <p>Three tiny reminders that the world is bigger, stranger, and more beautiful than it looks from here.</p>
+      <div class="cards">
+        <article class="card"><div class="icon">🪐</div><h3>Cosmic worlds</h3><p>Some planets rain glass sideways. Reality can be more imaginative than fiction.</p></article>
+        <article class="card"><div class="icon">🌌</div><h3>Deep space</h3><p>When you look into space, you also look back in time. Starlight carries history.</p></article>
+        <article class="card"><div class="icon">🚀</div><h3>Keep exploring</h3><p>Every big discovery begins with a small question and the courage to follow it.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="mission">
+      <div class="eyebrow"><span class="dot"></span> The mission</div>
+      <h2>Stay curious.</h2>
+      <p>This is your corner of the internet to pause, wonder, and remember that there is always something new to learn.</p>
+    </section>
+  </main>
+
+  <footer><span>© <span id="year"></span> NEBULA. Made for curious minds.</span><span>Built with HTML, CSS & JavaScript ✦</span></footer>
+
+  <script>
+    // Draw a lightweight animated starfield.
+    const canvas = document.getElementById("stars");
+    const ctx = canvas.getContext("2d");
+    let stars = [];
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+      canvas.style.width = innerWidth + "px";
+      canvas.style.height = innerHeight + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      stars = Array.from({ length: Math.min(180, Math.floor(innerWidth / 7)) }, () => ({
+        x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+        r: Math.random() * 1.4 + .2, a: Math.random() * .7 + .2,
+        speed: Math.random() * .25 + .04
+      }));
+    }
+    function draw() {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      for (const s of stars) {
+        s.a += (Math.random() - .5) * .035;
+        s.a = Math.max(.15, Math.min(1, s.a));
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(220,235,255,${s.a})`; ctx.fill();
+        s.y -= s.speed;
+        if (s.y < -3) { s.y = innerHeight + 3; s.x = Math.random() * innerWidth; }
+      }
+      requestAnimationFrame(draw);
+    }
+    resize();
+    draw();
+    window.addEventListener("resize", resize);
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const palettes = [
+      ["#8b5cf6", "#22d3ee"],
+      ["#ec4899", "#f59e0b"],
+      ["#10b981", "#60a5fa"],
+      ["#f97316", "#e879f9"]
+    ];
+    let palette = 0;
+    document.getElementById("colorBtn").addEventListener("click", () => {
+      palette = (palette + 1) % palettes.length;
+      document.documentElement.style.setProperty("--accent", palettes[palette][0]);
+      document.documentElement.style.setProperty("--accent2", palettes[palette][1]);
+    });
+  </script>
+</body>
+</html>
